@@ -15,9 +15,19 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerTintColor: "white",
+            headerStyle: { backgroundColor: "#941a1d" },
+          }}
+        >
           <Stack.Screen name="Details" component={DetailsScreen} />
-          <Stack.Screen name="Home" component={AllContacts} />
+          <Stack.Screen
+            name="Home"
+            component={AllContacts}
+            options={{ title: "ROI Contacts" }}
+          />
           <Stack.Screen name="New Contact" component={AddContact} />
           <Stack.Screen name="Edit Contact" component={EditContact} />
         </Stack.Navigator>

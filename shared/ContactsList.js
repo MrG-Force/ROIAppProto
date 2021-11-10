@@ -7,17 +7,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import People from "../app_data/PeopleDB";
-import ContactCard from "./ContactCard";
+import Card from "./ContactCard";
 
 const Contacts = ({ navigation }) => {
-  const contactItem = ({ item }) => {
-    return (
-      <ContactCard>
-        <Text style={styles.contactName}>{item.Name}</Text>
-        <Text style={styles.contactPhone}>{item.Phone}</Text>
-      </ContactCard>
-    );
-  };
   return (
     <View>
       <FlatList
@@ -27,12 +19,14 @@ const Contacts = ({ navigation }) => {
         data={People}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Details", item)}
+            onPress={() => navigation.navigate("Details", { itemId: item.Id })}
           >
-            <ContactCard>
-              <Text style={styles.contactName}>{item.Name}</Text>
-              <Text style={styles.contactPhone}>{item.Phone}</Text>
-            </ContactCard>
+            <Card>
+              <View style={styles.cardContent}>
+                <Text style={styles.contactName}>{item.Name}</Text>
+                <Text style={styles.contactPhone}>{item.Phone}</Text>
+              </View>
+            </Card>
           </TouchableOpacity>
         )}
       />
@@ -49,6 +43,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 10,
+  },
+  cardContent: {
+    marginHorizontal: 15,
+    marginVertical: 10,
   },
 });
 
