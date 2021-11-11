@@ -11,6 +11,10 @@ export default function DetailsScreen({ navigation, route }) {
   const paddedId = item.Id.toString().padStart(4, "0");
   const [modalVisible, setModalVisible] = useState(false);
 
+  const B = (props) => (
+    <Text style={{ fontWeight: "bold" }}>{props.children}</Text>
+  );
+
   const Delete = () => {
     setModalVisible(!modalVisible);
     //TODO: Add deletion logic
@@ -23,17 +27,17 @@ export default function DetailsScreen({ navigation, route }) {
       <Text style={styles.nameHeading}>{item.Name}</Text>
       <Text style={styles.idHeading}>Employee ID: {paddedId}</Text>
       <Card style={styles.fieldCard}>
-        <Text style={styles.atribName}>department</Text>
+        <Text style={styles.attribName}>department</Text>
         <Text style={styles.fieldValue}>
           {Departments[item.Department].name}
         </Text>
       </Card>
       <Card style={styles.fieldCard}>
-        <Text style={styles.atribName}>phone</Text>
+        <Text style={styles.attribName}>phone</Text>
         <Text style={styles.fieldValue}>{item.Phone}</Text>
       </Card>
       <Card style={styles.fieldCard}>
-        <Text style={styles.atribName}>street</Text>
+        <Text style={styles.attribName}>street</Text>
         <Text style={styles.fieldValue}>{item.Address.Street}</Text>
       </Card>
       <View style={styles.fieldsRow}>
@@ -45,7 +49,7 @@ export default function DetailsScreen({ navigation, route }) {
         </View>
         <View style={styles.state}>
           <Card>
-            <Text style={styles.atribName}>state</Text>
+            <Text style={styles.attribName}>state</Text>
             <Text style={styles.fieldValue}>{item.Address.State}</Text>
           </Card>
         </View>
@@ -53,13 +57,13 @@ export default function DetailsScreen({ navigation, route }) {
       <View style={styles.fieldsRow}>
         <View style={styles.zipCode}>
           <Card>
-            <Text style={styles.atribName}>zip code</Text>
+            <Text style={styles.attribName}>zip code</Text>
             <Text style={styles.fieldValue}>{item.Address.Zip}</Text>
           </Card>
         </View>
         <View style={styles.country}>
           <Card>
-            <Text style={styles.atribName}>country</Text>
+            <Text style={styles.attribName}>country</Text>
             <Text style={styles.fieldValue}>{item.Address.Country}</Text>
           </Card>
         </View>
@@ -80,8 +84,8 @@ export default function DetailsScreen({ navigation, route }) {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              Are you sure you want to delete {item.Name} from the Contacts?
-              This action is irreversible.
+              Are you sure you want to delete <B>{item.Name}</B> from
+              <B> Contacts</B>? {"\n"}This action is irreversible.
             </Text>
             <View style={styles.modalRow}>
               <Pressable
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     fontSize: 18,
   },
-  atribName: {
+  attribName: {
     fontSize: 12,
     color: "#941a1d",
     marginTop: 0,
@@ -155,11 +159,51 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(89, 89, 89, 0.5)",
   },
-  modalView: { backgroundColor: "white", marginHorizontal: "10%" },
-  modalText: {},
-  modalRow: { flexDirection: "row" },
-  modButton: {},
-  buttonCancel: {},
-  buttonProceed: {},
-  buttonText: {},
+  modalView: {
+    backgroundColor: "white",
+    marginHorizontal: "10%",
+    borderRadius: 25,
+    //--- debug ---
+    // borderColor: "red",
+    // borderStyle: "solid",
+    // borderWidth: 2,
+  },
+  modalText: {
+    lineHeight: 25,
+    textAlign: "justify",
+    fontSize: 18,
+    padding: 15,
+    //--- debug ---
+    // borderColor: "blue",
+    // borderStyle: "solid",
+    // borderWidth: 1,
+  },
+  modalRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  modButton: {
+    padding: 15,
+    marginVertical: 25,
+    width: "35%",
+    alignItems: "center",
+    borderRadius: 20,
+    //--- debug ---
+    borderStyle: "solid",
+  },
+  buttonCancel: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#D9D9D9",
+    borderWidth: 3,
+  },
+  buttonProceed: {
+    backgroundColor: "rgba(0, 167, 158, 0.6)",
+    borderColor: "#014a45",
+    borderWidth: 1,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    letterSpacing: 1,
+  },
 });
