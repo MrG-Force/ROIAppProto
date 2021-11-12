@@ -1,5 +1,11 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet, Image, View } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  View,
+  Pressable,
+} from "react-native";
 
 function DeleteBtn(props) {
   return (
@@ -45,6 +51,16 @@ const SaveBtn = (props) => {
   );
 };
 
+const AddContactBtn = (props) => {
+  return (
+    <Pressable onPress={props.onPress}>
+      <View>
+        <Image source={require("../images/ROI_add_button.png")} />
+      </View>
+    </Pressable>
+  );
+};
+
 const styles = StyleSheet.create({
   button: {
     borderRadius: 7,
@@ -68,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { DeleteBtn, EditBtn, SaveBtn };
+export { DeleteBtn, EditBtn, SaveBtn, AddContactBtn };

@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  Alert,
-  Platform,
-  KeyboardAvoidingView,
-} from "react-native";
+import { View, StyleSheet, Text, TextInput, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Card from "../shared/ContactCard";
-import { SaveBtn } from "../shared/coolButtons";
+import { SaveBtn } from "../shared/CoolButtons";
 import Departments from "../app_data/DepartmentsDB";
-import { SafeAreaView } from "react-native-safe-area-context";
+import People from "../app_data/PeopleDB";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const pickerItems = Departments.map((obj) => {
@@ -21,7 +12,8 @@ const pickerItems = Departments.map((obj) => {
 });
 
 export default function EditContact({ navigation, route }) {
-  const item = route.params;
+  const { itemId } = route.params;
+  const item = People.find((person) => person.Id === itemId);
   const paddedId = item.Id.toString().padStart(4, "0");
 
   const [formName, setName] = useState(item.Name);

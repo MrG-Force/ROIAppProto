@@ -9,10 +9,6 @@ const AllContacts = ({ navigation, route }) => {
       <View style={styles.container}>
         <Contacts navigation={navigation} />
       </View>
-      <Button
-        title="Add New Contact"
-        onPress={() => navigation.navigate("New Contact")}
-      />
     </SafeAreaView>
   );
 };
@@ -21,6 +17,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
+    backgroundColor: "#D9D9D9",
   },
 });
 

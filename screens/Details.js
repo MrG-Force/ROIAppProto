@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, Modal, Pressable, Alert } from "react-native";
 import Card from "../shared/ContactCard";
-import { DeleteBtn, EditBtn } from "../shared/coolButtons";
+import { DeleteBtn, EditBtn } from "../shared/CoolButtons";
 import People from "../app_data/PeopleDB";
 import Departments from "../app_data/DepartmentsDB";
 
@@ -43,7 +43,7 @@ export default function DetailsScreen({ navigation, route }) {
       <View style={styles.fieldsRow}>
         <View style={styles.city}>
           <Card>
-            <Text style={styles.atribName}>city</Text>
+            <Text style={styles.attribName}>city</Text>
             <Text style={styles.fieldValue}>{item.Address.City}</Text>
           </Card>
         </View>
@@ -75,7 +75,11 @@ export default function DetailsScreen({ navigation, route }) {
           </DeleteBtn>
         </View>
         <View style={styles.button}>
-          <EditBtn onPress={() => navigation.navigate("Edit Contact", item)}>
+          <EditBtn
+            onPress={() =>
+              navigation.navigate("Edit Contact", { itemId: item.Id })
+            }
+          >
             <Text>Edit contact</Text>
           </EditBtn>
         </View>
