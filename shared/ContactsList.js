@@ -35,7 +35,7 @@ const Contacts = ({ navigation }) => {
               >
                 <View>
                   <Ionicons
-                    name="chevron-forward-circle"
+                    name="chevron-forward-circle-outline"
                     size={45}
                     color="#00a79e"
                   />
