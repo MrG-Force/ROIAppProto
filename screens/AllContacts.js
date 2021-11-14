@@ -1,13 +1,26 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Alert, TextInput } from "react-native";
+import { View, StyleSheet, Platform, Alert, TextInput } from "react-native";
 import Contacts from "../shared/ContactsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import People from "../app_data/PeopleDB";
 import Card from "../shared/ContactCard";
+import { useFocusEffect } from "@react-navigation/native";
 
-const AllContacts = ({ navigation, route }) => {
+const AllContacts = ({ navigation }) => {
   const peopleData = People;
   const [searchNameInput, setSearchNameInput] = useState("");
+  const [searchIdInput, setSearchIdInput] = useState();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      alert("This screen was just focused");
+      // fetch data from DB
+      return () => {
+        setSearchNameInput("");
+      };
+    }, [])
+  );
+
   const filteredData = searchNameInput
     ? peopleData.filter((contact) =>
         contact.Name.toLocaleLowerCase().includes(
@@ -15,7 +28,7 @@ const AllContacts = ({ navigation, route }) => {
         )
       )
     : peopleData;
-  const [searchIdInput, setSearchIdInput] = useState();
+
   const submitSearch = (id) => {
     // Alert.alert(`${id}`);
     if (peopleData.find((contact) => contact.Id == id)) {
@@ -49,6 +62,7 @@ const AllContacts = ({ navigation, route }) => {
               value={searchIdInput}
               onChangeText={(input) => setSearchIdInput(input)}
               onSubmitEditing={(e) => submitSearch(e.nativeEvent.text)}
+              keyboardType={Platform.OS === "ios" ? "default" : "numeric"}
             />
           </Card>
         </View>
