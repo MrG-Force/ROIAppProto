@@ -1,25 +1,19 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 import People from "../app_data/PeopleDB";
 import Card from "./ContactCard";
-import { Ionicons } from "@expo/vector-icons";
+import { IconBtn } from "./RoiButton";
 
 // TODO: Add some icons to indicate go to details: arrow chevron etc
 
-const Contacts = ({ navigation }) => {
+const Contacts = ({ navigation, data }) => {
   return (
     <View>
       <FlatList
         contentContainerStyle={styles.contentContainer}
         keyExtractor={(item) => item.Id}
         bounces="false"
-        data={People}
+        data={data}
         renderItem={({ item }) => (
           <Card>
             <View style={styles.cardWrapper}>
@@ -27,20 +21,15 @@ const Contacts = ({ navigation }) => {
                 <Text style={styles.contactName}>{item.Name}</Text>
                 <Text style={styles.contactPhone}>{item.Phone}</Text>
               </View>
-              <TouchableOpacity
+              <IconBtn
                 style={styles.chevronRight}
                 onPress={() =>
                   navigation.navigate("Details", { itemId: item.Id })
                 }
-              >
-                <View>
-                  <Ionicons
-                    name="chevron-forward-circle-outline"
-                    size={45}
-                    color="#00a79e"
-                  />
-                </View>
-              </TouchableOpacity>
+                iconName="chevron-forward-circle-outline"
+                size={45}
+                color="#00a79e"
+              />
             </View>
           </Card>
         )}
@@ -71,6 +60,8 @@ const styles = StyleSheet.create({
   },
   chevronRight: {
     justifyContent: "center",
+    marginRight: 2,
+
     //--- debug ---
     // borderColor: "blue",
     // borderStyle: "solid",

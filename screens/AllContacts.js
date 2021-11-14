@@ -1,13 +1,60 @@
-import React from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, Alert, TextInput } from "react-native";
 import Contacts from "../shared/ContactsList";
 import { SafeAreaView } from "react-native-safe-area-context";
+import People from "../app_data/PeopleDB";
+import Card from "../shared/ContactCard";
 
 const AllContacts = ({ navigation, route }) => {
+  const peopleData = People;
+  const [searchNameInput, setSearchNameInput] = useState("");
+  const filteredData = searchNameInput
+    ? peopleData.filter((contact) =>
+        contact.Name.toLocaleLowerCase().includes(
+          searchNameInput.toLocaleLowerCase()
+        )
+      )
+    : peopleData;
+  const [searchIdInput, setSearchIdInput] = useState();
+  const submitSearch = (id) => {
+    // Alert.alert(`${id}`);
+    if (peopleData.find((contact) => contact.Id == id)) {
+      setSearchIdInput("");
+      navigation.navigate("Details", { itemId: parseInt(id) });
+    } else {
+      Alert.alert(`Contact with Id: ${id} does not exist.`);
+      setSearchIdInput("");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.inputsRow}>
+        <View style={styles.nameSearchWrapper}>
+          <Card style={styles.searchBox}>
+            <TextInput
+              style={styles.searchField}
+              value={searchNameInput}
+              onChangeText={(text) => setSearchNameInput(text)}
+              selectTextOnFocus={true}
+              placeholder="&#x1F50E; Search by name"
+            />
+          </Card>
+        </View>
+        <View style={styles.idSearchwrapper}>
+          <Card style={styles.searchBox}>
+            <TextInput
+              style={styles.searchField}
+              placeholder="&#x1F50E; Id"
+              value={searchIdInput}
+              onChangeText={(input) => setSearchIdInput(input)}
+              onSubmitEditing={(e) => submitSearch(e.nativeEvent.text)}
+            />
+          </Card>
+        </View>
+      </View>
       <View style={styles.container}>
-        <Contacts navigation={navigation} />
+        <Contacts navigation={navigation} data={filteredData} />
       </View>
     </SafeAreaView>
   );
@@ -18,6 +65,27 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: "#D9D9D9",
+  },
+  searchField: {
+    marginHorizontal: 10,
+    marginBottom: 3,
+    fontSize: 18,
+  },
+  searchBox: {
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#014a45",
+    paddingVertical: 5,
+  },
+  inputsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  nameSearchWrapper: {
+    width: "70%",
+  },
+  idSearchwrapper: {
+    width: "28%",
   },
 });
 
