@@ -20,7 +20,7 @@ const AllContacts = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      alert("This screen was just focused");
+      //alert("This screen was just focused");
       // fetch data from DB
       return () => {
         setSearchNameInput("");
