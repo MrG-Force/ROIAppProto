@@ -6,14 +6,14 @@ import { IconBtn } from "./RoiButton";
 
 // TODO: Add some icons to indicate go to details: arrow chevron etc
 
-const Contacts = ({ navigation, data }) => {
+const Contacts = ({ navigation, contactsData }) => {
   return (
     <View>
       <FlatList
         contentContainerStyle={styles.contentContainer}
         keyExtractor={(item) => item.Id}
         bounces="false"
-        data={data}
+        data={contactsData}
         renderItem={({ item }) => (
           <Card>
             <View style={styles.cardWrapper}>

@@ -1,14 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import AllContacts from "./screens/AllContacts";
 import DetailsScreen from "./screens/Details";
 import AddContact from "./screens/AddContact";
 import EditContact from "./screens/EditContact";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { AddContactBtn } from "./shared/CoolButtons";
+import { IconBtn } from "./shared/RoiButton";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +19,7 @@ export default function App() {
           initialRouteName="Home"
           screenOptions={{
             headerTintColor: "white",
-            headerStyle: { backgroundColor: "#3b3b3b" },
+            headerStyle: { backgroundColor: "#941a1d" },
           }}
         >
           <Stack.Screen name="Details" component={DetailsScreen} />
@@ -30,8 +29,12 @@ export default function App() {
             options={({ navigation }) => ({
               headerTitle: "ROI Contacts",
               headerRight: () => (
-                <AddContactBtn
+                <IconBtn
+                  style={styles.AddContactBtn}
                   onPress={() => navigation.navigate("New Contact")}
+                  iconName="person-add"
+                  size={30}
+                  color="#ffffff"
                 />
               ),
               headerTitleStyle: { fontSize: 25 },
@@ -51,5 +54,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  AddContactBtn: {
+    marginRight: 2,
   },
 });

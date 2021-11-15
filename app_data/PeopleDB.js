@@ -1,4 +1,4 @@
-const People = [
+const RawPeople = [
   {
     Id: 1,
     Name: "John Smith",
@@ -104,5 +104,17 @@ const People = [
     },
   },
 ];
+
+const People = RawPeople.sort((a, b) => {
+  var nameA = a.Name.toLowerCase()[0];
+  var nameB = b.Name.toUpperCase()[0];
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+});
 
 export default People;

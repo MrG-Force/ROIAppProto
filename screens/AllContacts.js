@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Platform, Alert, TextInput } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Platform,
+  Alert,
+  TextInput,
+  Text,
+} from "react-native";
 import Contacts from "../shared/ContactsList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import People from "../app_data/PeopleDB";
@@ -39,7 +46,7 @@ const AllContacts = ({ navigation }) => {
       setSearchIdInput("");
     }
   };
-
+  // TODO: Add filter by department, sort contacts
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputsRow}>
@@ -68,7 +75,7 @@ const AllContacts = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.container}>
-        <Contacts navigation={navigation} data={filteredData} />
+        <Contacts navigation={navigation} contactsData={filteredData} />
       </View>
     </SafeAreaView>
   );
@@ -100,6 +107,19 @@ const styles = StyleSheet.create({
   },
   idSearchwrapper: {
     width: "28%",
+  },
+  webAddButton: {
+    ...Platform.select({
+      web: {
+        display: "flex",
+      },
+      android: {
+        display: "none",
+      },
+      ios: {
+        display: "none",
+      },
+    }),
   },
 });
 
