@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Modal, Pressable, Alert } from "react-native";
+import { View, StyleSheet, Text, Alert } from "react-native";
 import Card from "../shared/ContactCard";
-import { DeleteBtn, EditBtn } from "../shared/CoolButtons";
 import People from "../app_data/PeopleDB";
 import Departments from "../app_data/DepartmentsDB";
+import { ComposedIconBtn, IconBtn } from "../shared/RoiButton";
+import { ModalConfirmDelete } from "./Modals";
 
 export default function DetailsScreen({ navigation, route }) {
   const { itemId } = route.params;
@@ -11,16 +12,25 @@ export default function DetailsScreen({ navigation, route }) {
   const paddedId = item.Id.toString().padStart(4, "0");
   const [modalVisible, setModalVisible] = useState(false);
 
-  const B = (props) => (
-    <Text style={{ fontWeight: "bold" }}>{props.children}</Text>
-  );
-
   const Delete = () => {
     setModalVisible(!modalVisible);
     //TODO: Add deletion logic
     Alert.alert(`${item.Name} has been deleted.`);
     navigation.navigate("Home");
   };
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconBtn
+          onPress={() => setModalVisible(true)}
+          iconName="trash-outline"
+          size={30}
+          color="#ffffff"
+        />
+      ),
+    });
+  });
 
   return (
     <View style={styles.container}>
@@ -70,44 +80,23 @@ export default function DetailsScreen({ navigation, route }) {
       </View>
       <View style={styles.buttonsRow}>
         <View style={styles.button}>
-          <DeleteBtn onPress={() => setModalVisible(true)}>
-            <Text>Delete contact</Text>
-          </DeleteBtn>
-        </View>
-        <View style={styles.button}>
-          <EditBtn
+          <ComposedIconBtn
+            iconName="account-edit-outline"
+            size={35}
+            color="#00a79e"
+            label="Edit contact"
             onPress={() =>
               navigation.navigate("Edit Contact", { itemId: item.Id })
             }
-          >
-            <Text>Edit contact</Text>
-          </EditBtn>
+          />
         </View>
       </View>
-      <Modal animationType="fade" transparent={true} visible={modalVisible}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              Are you sure you want to delete <B>{item.Name}</B> from
-              <B> Contacts</B>? {"\n"}This action is irreversible.
-            </Text>
-            <View style={styles.modalRow}>
-              <Pressable
-                style={[styles.modButton, styles.buttonCancel]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.modButton, styles.buttonProceed]}
-                onPress={Delete}
-              >
-                <Text style={styles.buttonText}>Delete</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <ModalConfirmDelete
+        visible={modalVisible}
+        onCancelAction={() => setModalVisible(!modalVisible)}
+        onConfirmDelete={Delete}
+        itemName={item.Name}
+      />
     </View>
   );
 }
@@ -154,60 +143,4 @@ const styles = StyleSheet.create({
   zipCode: { width: "30%" },
   country: { width: "70%" },
   button: { width: "30%" },
-
-  //------ Modal -------
-
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(89, 89, 89, 0.5)",
-  },
-  modalView: {
-    backgroundColor: "white",
-    marginHorizontal: "10%",
-    borderRadius: 25,
-    //--- debug ---
-    // borderColor: "red",
-    // borderStyle: "solid",
-    // borderWidth: 2,
-  },
-  modalText: {
-    lineHeight: 25,
-    textAlign: "justify",
-    fontSize: 18,
-    padding: 15,
-    //--- debug ---
-    // borderColor: "blue",
-    // borderStyle: "solid",
-    // borderWidth: 1,
-  },
-  modalRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  modButton: {
-    padding: 15,
-    marginVertical: 25,
-    width: "35%",
-    alignItems: "center",
-    borderRadius: 20,
-    //--- debug ---
-    borderStyle: "solid",
-  },
-  buttonCancel: {
-    backgroundColor: "#FFFFFF",
-    borderColor: "#D9D9D9",
-    borderWidth: 3,
-  },
-  buttonProceed: {
-    backgroundColor: "rgba(0, 167, 158, 0.6)",
-    borderColor: "#014a45",
-    borderWidth: 1,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 1,
-  },
 });
