@@ -57,7 +57,8 @@ export default function AddContact({ navigation }) {
       <Text style={styles.attribName}>department</Text>
       <Card style={styles.fieldCard}>
         <Picker
-          style={{ fontSize: 18 }}
+          style={styles.picker}
+          itemStyle={styles.pickerItem}
           selectedValue={formDepartment}
           onValueChange={(itemValue) => setDepartment(itemValue)}
         >
@@ -211,5 +212,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "#00a79e",
+  },
+  picker: {
+    height: 50,
+  },
+  pickerItem: {
+    height: 50,
+    fontSize: 18,
   },
 });

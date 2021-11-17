@@ -6,6 +6,7 @@ import { SaveBtn } from "../shared/CoolButtons";
 import Departments from "../app_data/DepartmentsDB";
 import People from "../app_data/PeopleDB";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ComposedIconBtn } from "../shared/RoiButton";
 
 const pickerItems = Departments.map((obj) => {
   return <Picker.Item key={obj.id} label={obj.name} value={obj.name} />;
@@ -64,7 +65,8 @@ export default function EditContact({ navigation, route }) {
       <Text style={styles.attribName}>department</Text>
       <Card style={styles.fieldCard}>
         <Picker
-          style={{ fontSize: 18 }}
+          style={styles.picker}
+          itemStyle={styles.pickerItem}
           selectedValue={formDepartment}
           onValueChange={(itemValue) => setDepartment(itemValue)}
         >
@@ -145,9 +147,14 @@ export default function EditContact({ navigation, route }) {
       </View>
       <View style={styles.buttonsRow}>
         <View style={styles.button}>
-          <SaveBtn style={styles.saveBtn} onPress={Submit}>
-            <Text>Save changes</Text>
-          </SaveBtn>
+          <ComposedIconBtn
+            style={styles.saveBtn}
+            iconName="account-check-outline"
+            size={35}
+            color="#00534f"
+            label="Save changes"
+            onPress={Submit}
+          />
         </View>
       </View>
     </KeyboardAwareScrollView>
@@ -209,5 +216,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "#00a79e",
+  },
+  picker: {
+    height: 50,
+  },
+  pickerItem: {
+    height: 50,
+    fontSize: 18,
   },
 });
