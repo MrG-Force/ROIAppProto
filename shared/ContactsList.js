@@ -1,12 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import People from "../app_data/PeopleDB";
 import Card from "./ContactCard";
 import { IconBtn } from "./RoiButton";
 
 // TODO: Add some icons to indicate go to details: arrow chevron etc
 
-const Contacts = ({ navigation, contactsData }) => {
+const ContactsList = ({ navigation, contactsData }) => {
   return (
     <View>
       <FlatList
@@ -69,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Contacts;
+export default ContactsList;
