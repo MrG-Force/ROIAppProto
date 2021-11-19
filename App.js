@@ -25,17 +25,8 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={AllContacts}
-            options={({ navigation }) => ({
+            options={() => ({
               headerTitle: "ROI Contacts",
-              headerRight: () => (
-                <IconBtn
-                  style={styles.AddContactBtn}
-                  onPress={() => navigation.navigate("New Contact")}
-                  iconName="person-add"
-                  size={30}
-                  color="#ffffff"
-                />
-              ),
               headerTitleStyle: { fontSize: 25 },
             })}
           />
