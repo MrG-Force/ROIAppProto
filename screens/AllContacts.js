@@ -1,46 +1,110 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Platform, Alert, TextInput } from "react-native";
+// import People from "../app_data/PeopleDB";
+// import Departments from "../app_data/DepartmentsDB";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  Platform,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import ContactsList from "../shared/ContactsList";
 import { SafeAreaView } from "react-native-safe-area-context";
-import People from "../app_data/PeopleDB";
-import Departments from "../app_data/DepartmentsDB";
 import Card from "../shared/ContactCard";
 import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import UpDownCaret from "../shared/UpDownCaret";
 import { IconBtn } from "../shared/RoiButton";
-
-const filterItems = Departments.map((obj) => {
-  return <Picker.Item key={obj.id} label={obj.name} value={obj.id} />;
-});
+import {
+  getDepartmentsFromApi,
+  getDummies,
+  getPeopleFromApi,
+} from "../app_data/PeopleApi";
 
 const AllContacts = ({ navigation }) => {
-  const peopleData = People;
+  const [peopleData, setPeopleData] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [searchNameInput, setSearchNameInput] = useState("");
-  const [searchIdInput, setSearchIdInput] = useState();
+  const [searchIdInput, setSearchIdInput] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState();
   const [departmentValue, setDepartmentValue] = useState();
+  const [isLoading, setIsLoading] = useState(true);
   // useState for filteredData
-  const [filteredData, setFilteredData] = useState(peopleData);
+  const [filteredData, setFilteredData] = useState([]);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconBtn
+          onPress={() =>
+            navigation.navigate("New Contact", { departments: departments })
+          }
+          iconName="person-add"
+          size={30}
+          color="#ffffff"
+          style={{ marginRight: 10 }}
+        />
+      ),
+    });
+  });
 
   useFocusEffect(
     React.useCallback(() => {
-      //alert("This screen was just focused");
-      // fetch data from DB
+      getDepartmentsFromApi()
+        .then((data) => {
+          setDepartments(data.d);
+          console.log(data.d);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, [])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // alert("This screen was just focused");
+      //---------- fetch data from WebService ----------
+      getPeopleFromApi()
+        .then((data) => {
+          setPeopleData(data.d);
+          setFilteredData(data.d);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => setIsLoading(false));
+      //---------- Get dummy data ----------
+      // setPeopleData(getDummies);
+
       return () => {
         setSearchNameInput("");
-        setFilteredData(peopleData);
-        setDepartmentValue(null);
+        setDepartmentValue("all");
+        setDepartmentFilter("all"); // This may cause infinite trouble
       };
     }, [])
   );
 
+  // To prevent the filterByName to be called on the first render
+  const firstRender = useRef(true);
+  // To control when filterByDepartment is called
+  const filteringByDepartment = useRef(false);
+
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
     setFilteredData(filterByName());
-    setFilteredData(filterByDepartment());
-  }, [departmentFilter, searchNameInput]);
+    if (filteringByDepartment.current) {
+      setFilteredData(filterByDepartment());
+      filteringByDepartment.current = false;
+    }
+    //
+  }, [searchNameInput, departmentFilter]);
 
   const filterByName = () => {
+    //console.log("filterByName was called");
     if (searchNameInput) {
       return peopleData.filter((contact) =>
         contact.Name.toLocaleLowerCase().includes(
@@ -53,22 +117,26 @@ const AllContacts = ({ navigation }) => {
   };
 
   const filterByDepartment = () => {
-    if (departmentFilter != null) {
+    //console.log(departmentFilter);
+    if (departmentFilter == "all") {
+      return filterByName();
       // alert(`${departmentFilter}`);
+    } else {
       return filterByName().filter(
         (contact) => contact.Department === parseInt(departmentFilter)
       );
-    } else {
-      return filterByName();
     }
   };
 
   const submitSearch = (id) => {
     if (peopleData.find((contact) => contact.Id == id)) {
       setSearchIdInput("");
-      navigation.navigate("Details", { itemId: parseInt(id) });
+      navigation.navigate("Details", {
+        itemId: parseInt(id),
+        departments: departments,
+      });
     } else {
-      Alert.alert(`Contact with Id: ${id} does not exist.`);
+      alert(`Contact with Id: ${id} does not exist.`);
       setSearchIdInput("");
     }
   };
@@ -111,22 +179,35 @@ const AllContacts = ({ navigation }) => {
         >
           <Picker.Item
             key={-1}
-            label=" All departments..."
-            value={null}
+            label="All departments..."
+            value="all"
             enabled={true}
           />
-          {filterItems}
+          {departments.map((obj) => (
+            <Picker.Item key={obj.Id} label={obj.Name} value={obj.Id} />
+          ))}
         </Picker>
         <IconBtn
           style={styles.filterBtn}
           iconName="funnel-sharp"
           size={28}
           color="#ffffff"
-          onPress={() => setDepartmentFilter(departmentValue)}
+          onPress={() => {
+            filteringByDepartment.current = true;
+            setDepartmentFilter(departmentValue);
+          }}
         />
       </View>
       <View style={styles.container}>
-        <ContactsList navigation={navigation} contactsData={filteredData} />
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <ContactsList
+            navigation={navigation}
+            contactsData={filteredData}
+            departments={departments}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

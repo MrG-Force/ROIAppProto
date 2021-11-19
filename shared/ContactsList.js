@@ -2,15 +2,16 @@ import React from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import Card from "./ContactCard";
 import { IconBtn } from "./RoiButton";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // TODO: Add some icons to indicate go to details: arrow chevron etc
 
-const ContactsList = ({ navigation, contactsData }) => {
+const ContactsList = ({ navigation, contactsData, departments }) => {
   return (
     <View>
       <FlatList
         contentContainerStyle={styles.contentContainer}
-        keyExtractor={(item) => item.Id}
+        keyExtractor={(item) => item.Name}
         bounces="false"
         data={contactsData}
         renderItem={({ item }) => (
@@ -18,12 +19,28 @@ const ContactsList = ({ navigation, contactsData }) => {
             <View style={styles.cardWrapper}>
               <View style={styles.cardContent}>
                 <Text style={styles.contactName}>{item.Name}</Text>
-                <Text style={styles.contactPhone}>{item.Phone}</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    style={{ marginRight: 5, marginTop: 5 }}
+                    name="cellphone-iphone"
+                    size={20}
+                    color="#595959"
+                  />
+                  <Text style={styles.contactPhone}>{item.Phone}</Text>
+                </View>
               </View>
               <IconBtn
                 style={styles.chevronRight}
                 onPress={() =>
-                  navigation.navigate("Details", { itemId: item.Id })
+                  navigation.navigate("Details", {
+                    itemId: item.Id,
+                    departments: departments,
+                  })
                 }
                 iconName="chevron-forward-circle-outline"
                 size={45}

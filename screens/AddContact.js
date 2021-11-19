@@ -1,39 +1,68 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TextInput, Alert } from "react-native";
+import { View, StyleSheet, Text, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Card from "../shared/ContactCard";
-import { SaveBtn } from "../shared/CoolButtons";
-import Departments from "../app_data/DepartmentsDB";
+//import Departments from "../app_data/DepartmentsDB";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ComposedIconBtn } from "../shared/RoiButton";
+import { peoplePostApiCommand } from "../app_data/PeopleApi";
 
-const pickerItems = Departments.map((obj) => {
-  return <Picker.Item key={obj.id} label={obj.name} value={obj.name} />;
-});
+export default function AddContact({ navigation, route }) {
+  const { departments } = route.params;
+  const [formName, setName] = useState("");
+  const [formDepartment, setDepartment] = useState("");
+  const [formPhone, setPhone] = useState("");
+  const [formStreet, setStreet] = useState("");
+  const [formCity, setCity] = useState("");
+  const [formState, setState] = useState("");
+  const [formZip, setZip] = useState("");
+  const [formCountry, setCountry] = useState("");
 
-export default function AddContact({ navigation }) {
-  const [formName, setName] = useState();
-  const [formDepartment, setDepartment] = useState();
-  const [formPhone, setPhone] = useState();
-  const [formStreet, setStreet] = useState();
-  const [formCity, setCity] = useState();
-  const [formState, setState] = useState();
-  const [formZip, setZip] = useState();
-  const [formCountry, setCountry] = useState();
+  const person = {
+    name: formName,
+    phone: formPhone,
+    department: parseInt(formDepartment),
+    street: formStreet,
+    city: formCity,
+    state: formState,
+    zip: formZip,
+    country: formCountry,
+  };
 
   const Submit = () => {
     if (
       !formName ||
       !formPhone ||
+      !formDepartment ||
       !formStreet ||
       !formCity ||
       !formState ||
       !formZip ||
       !formCountry
     ) {
-      Alert.alert("Please enter info in all required fields.");
+      alert("Please enter info in all fields and select a valid department.");
     } else {
-      Alert.alert("New contact has been successfully added.");
-      navigation.navigate("Home");
+      peoplePostApiCommand("AddPerson", person)
+        .then((response) => {
+          if (response.ok) {
+            alert(`${formName} is now a ROI contact.`);
+            navigation.navigate("Home");
+          } else {
+            return Promise.reject(
+              alert(
+                "Error: Something went awfully wrong. \n" +
+                  "Status: " +
+                  response.status +
+                  "\n" +
+                  "Status Message: " +
+                  response.statusText
+              )
+            );
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
@@ -63,12 +92,14 @@ export default function AddContact({ navigation }) {
           onValueChange={(itemValue) => setDepartment(itemValue)}
         >
           <Picker.Item
-            key=""
+            key={-1}
             label="-- Select department --"
-            value={null}
-            enabled={false}
+            value=""
+            enabled={true}
           />
-          {pickerItems}
+          {departments.map((obj) => (
+            <Picker.Item key={obj.Id} label={obj.Name} value={obj.Id} />
+          ))}
         </Picker>
       </Card>
       <Card style={styles.fieldCard}>
@@ -147,9 +178,14 @@ export default function AddContact({ navigation }) {
       </View>
       <View style={styles.buttonsRow}>
         <View style={styles.button}>
-          <SaveBtn style={styles.saveBtn} onPress={Submit}>
-            <Text>Add contact</Text>
-          </SaveBtn>
+          <ComposedIconBtn
+            style={styles.saveBtn}
+            iconName="account-plus-outline"
+            size={35}
+            color="#00534f"
+            label="Add contact"
+            onPress={Submit}
+          />
         </View>
       </View>
     </KeyboardAwareScrollView>
