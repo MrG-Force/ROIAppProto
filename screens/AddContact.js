@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TextInput } from "react-native";
+import { View, StyleSheet, Text, TextInput, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Card from "../shared/ContactCard";
 //import Departments from "../app_data/DepartmentsDB";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { ComposedIconBtn } from "../shared/RoiButton";
 import { peoplePostApiCommand } from "../app_data/PeopleApi";
+import UpDownCaret from "../shared/UpDownCaret";
 
 export default function AddContact({ navigation, route }) {
   const { departments } = route.params;
@@ -83,24 +84,29 @@ export default function AddContact({ navigation, route }) {
           placeholder="Full name"
         />
       </Card>
-      <Text style={styles.attribName}>department</Text>
       <Card style={styles.fieldCard}>
-        <Picker
-          style={styles.picker}
-          itemStyle={styles.pickerItem}
-          selectedValue={formDepartment}
-          onValueChange={(itemValue) => setDepartment(itemValue)}
-        >
-          <Picker.Item
-            key={-1}
-            label="-- Select department --"
-            value=""
-            enabled={true}
-          />
-          {departments.map((obj) => (
-            <Picker.Item key={obj.Id} label={obj.Name} value={obj.Id} />
-          ))}
-        </Picker>
+        <Text style={[styles.attribName, styles.attribNameDept]}>
+          department
+        </Text>
+        <View style={styles.pickerView}>
+          <UpDownCaret style={styles.pickerCaret} />
+          <Picker
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            selectedValue={formDepartment}
+            onValueChange={(itemValue) => setDepartment(itemValue)}
+          >
+            <Picker.Item
+              key={-1}
+              label="-- Select department --"
+              value=""
+              enabled={true}
+            />
+            {departments.map((obj) => (
+              <Picker.Item key={obj.Id} label={obj.Name} value={obj.Id} />
+            ))}
+          </Picker>
+        </View>
       </Card>
       <Card style={styles.fieldCard}>
         <Text style={styles.attribName}>phone</Text>
@@ -222,11 +228,6 @@ const styles = StyleSheet.create({
     marginLeft: 3,
   },
   attribNameDept: {
-    fontSize: 12,
-    color: "#00a79e",
-    marginTop: 0,
-    marginBottom: 0,
-    marginLeft: 3,
     position: "absolute",
   },
   fieldsRow: {
@@ -250,10 +251,51 @@ const styles = StyleSheet.create({
     borderColor: "#00a79e",
   },
   picker: {
-    height: 50,
+    marginTop: 10,
+    height: 45,
+    width: "90%",
+    backgroundColor: "#ffffff",
+    marginLeft: "10%",
+    borderRadius: 5,
+    // --- debug
+    // borderWidth: 1,
+    // borderStyle: "solid",
+    // borderColor: "blue",
   },
   pickerItem: {
     height: 50,
     fontSize: 18,
+  },
+  pickerView: {
+    flexDirection: "row",
+    marginVertical: 5,
+    marginLeft: 3,
+    marginRight: 15,
+    zIndex: 1,
+    alignItems: "flex-start",
+    //--- debug ---
+    // borderWidth: 1,
+    // borderStyle: "solid",
+    // borderColor: "red",
+  },
+  pickerCaret: {
+    ...Platform.select({
+      ios: {
+        display: "flex",
+        position: "absolute",
+        zIndex: 2,
+        marginTop: 10,
+        //--- debug ---
+        // borderWidth: 1,
+        // borderStyle: "solid",
+        // borderColor: "red",
+      },
+      android: {
+        display: "none",
+      },
+      web: {
+        display: "none",
+      },
+    }),
   },
 });
