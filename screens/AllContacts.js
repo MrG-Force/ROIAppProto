@@ -53,7 +53,6 @@ const AllContacts = ({ navigation }) => {
       getDepartmentsFromApi()
         .then((data) => {
           setDepartments(data.d);
-          console.log(data.d);
         })
         .catch((error) => {
           console.error(error);
@@ -63,7 +62,6 @@ const AllContacts = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // alert("This screen was just focused");
       //---------- fetch data from WebService ----------
       getPeopleFromApi()
         .then((data) => {
@@ -104,7 +102,6 @@ const AllContacts = ({ navigation }) => {
   }, [searchNameInput, departmentFilter]);
 
   const filterByName = () => {
-    //console.log("filterByName was called");
     if (searchNameInput) {
       return peopleData.filter((contact) =>
         contact.Name.toLocaleLowerCase().includes(
@@ -117,10 +114,8 @@ const AllContacts = ({ navigation }) => {
   };
 
   const filterByDepartment = () => {
-    //console.log(departmentFilter);
     if (departmentFilter == "all") {
       return filterByName();
-      // alert(`${departmentFilter}`);
     } else {
       return filterByName().filter(
         (contact) => contact.Department === parseInt(departmentFilter)
@@ -141,7 +136,6 @@ const AllContacts = ({ navigation }) => {
     }
   };
 
-  // TODO: sort contacts?
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inputsRow}>
@@ -274,6 +268,12 @@ const styles = StyleSheet.create({
       },
       web: {
         display: "none",
+      },
+      default: {
+        //--- debug ---
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderColor: "red",
       },
     }),
   },
