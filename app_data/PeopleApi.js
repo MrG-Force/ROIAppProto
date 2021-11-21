@@ -1,5 +1,11 @@
-const baseUrl = "http://localhost:63192";
+import { Platform } from "react-native";
 
+const baseUrl =
+  Platform.OS == "web"
+    ? "http://localhost:63192"
+    : "http://2bcb-49-181-181-223.ngrok.io";
+
+// TODO: Create a reusable GetFromPeopleApi
 const getDepartmentsFromApi = async () => {
   const relUrl = "/PeopleService.asmx/GetDepartments";
   try {
