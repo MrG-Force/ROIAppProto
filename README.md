@@ -43,4 +43,4 @@ A React Native App for managing the contact information of people who works in t
 ## 11.	Going back
 a.	Except for the home screen (All Contacts), at any point, you can **navigate** without saving any changes to the previous screen by pressing the left pointing arrow at the top left corner of the screen. 
 
-And that's pretty much it, cruisy 🤘 :grin:
+And that's pretty much it... cruisy 🤘 :grin:
